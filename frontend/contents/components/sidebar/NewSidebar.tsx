@@ -12,12 +12,7 @@ export default function NewSidebar() {
     return (
         <div className='bg-white flex-col h-screen w-[15%] p-2'>
             <div className='flex flex-row justify-center'>
-                <Image className="justify-center -mb-24 -mt-10"
-                       src='/../public/meoris.png'
-                       width={200}
-                       height={200}
-                       alt="MindMatrix logo"
-                />
+
             </div>
             <div className='flex flex-row'>
                 <NavLink
@@ -118,7 +113,7 @@ export default function NewSidebar() {
                 label='Log out'
                 icon={<IconLogout2/>}
                 onClick={() => {
-                    localStorage.removeItem('accessToken');
+                    localStorage.removeItem('profile');
                     router.push('/login');
                 }}
             />

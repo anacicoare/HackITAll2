@@ -1,6 +1,5 @@
 import { AuthServices } from '@/services/authentication/authservices';
 import { createContext, useState, useEffect } from 'react';
-import jwtDecode from 'jwt-decode';
 import Cookies from "js-cookie";
 import { useRouter } from 'next/router';
 import { notifications } from '@mantine/notifications';
@@ -37,20 +36,17 @@ export const ProfileProvider = ({ children }: any) => {
      * When load page, check cookies to see if user is logged in
      */
     const getUserProfile = () => {
-        const accessToken: any = localStorage.getItem('accessToken');
+        const profile: any = localStorage.getItem('profile');
+        const accessToken = "";
         //Case not authenticated
         if (!accessToken) {
             setAuthorized(false)
         } else {
             //Case have accessToken
-            const decodedData: any = jwtDecode(accessToken);
             setProfile({
-                email: decodedData?.email,
-                role: decodedData?.role,
-                firstName: decodedData?.firstName,
-                lastName: decodedData?.lastName,
-                phoneNumber: decodedData?.phoneNumber,
-                avatarUrl: decodedData?.avatarUrl
+                email: profile?.email,
+                name: profile?.name,
+                user_type: profile?.user_type,
             })
 
             //Case logged in
@@ -65,19 +61,18 @@ export const ProfileProvider = ({ children }: any) => {
             if (response && response?.data) {
                 const dataResponse = response?.data;
                 //If the authentication succeeds, update the state with the user's profile
-                localStorage.setItem('accessToken', dataResponse);
+                localStorage.setItem('profile', dataResponse);
 
-                const decodedData: any = jwtDecode(dataResponse);
                 setProfile({
-                    email: decodedData?.email,
-                    role: decodedData?.role,
-                    firstName: decodedData?.firstName,
-                    lastName: decodedData?.lastName,
-                    phoneNumber: decodedData?.phoneNumber,
-                    avatarUrl: decodedData?.avatarUrl
+                    email: dataResponse?.email,
+                    name: dataResponse?.name,
+                    user_type: dataResponse?.user_type,
                 })
                 setAuthorized(true);
-                router.push(`/dashboard`)
+
+                if(dataResponse?.user_type === 'normal') {
+                    router.push('/dashboard');
+                }
 
                 console.log("login success");
             } else {
@@ -122,21 +117,6 @@ export const ProfileProvider = ({ children }: any) => {
         AuthServices.callApiRegister(data).then((response: any) => {
             if (response && response?.data) {
                 const dataResponse = response?.data;
-
-                //If the authentication succeeds, update the state with the user's profile
-                setProfile({
-                    email: dataResponse?.email,
-                    role: "Student",
-                    firstName: dataResponse?.firstName,
-                    lastName: dataResponse?.lastName,
-                    phoneNumber: dataResponse?.phoneNumber,
-                    avatarUrl: ""
-                })
-                setAuthorized(true);
-
-                console.log('access token is:');
-                console.log(response?.headers['x-auth-token']);
-                localStorage.setItem('accessToken', response?.headers['x-auth-token']);
 
                 console.log("register success");
                 router?.push('/login');

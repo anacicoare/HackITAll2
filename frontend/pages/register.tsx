@@ -7,31 +7,36 @@ import {
     Container,
     Button,
     Divider,
-    Box
+    Box, Select
 } from '@mantine/core';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useForm } from '@mantine/form';
-import {useContext, useEffect, useState} from 'react';
+import {useContext, useState} from 'react';
 import { ProfileContext } from '@/contexts/ProfileContext';
-import { useRouter } from 'next/navigation';
+import { useRouter } from 'next/router';
 import bg from '../public/login-bg.jpg';
+import {Simulate} from "react-dom/test-utils";
+import select = Simulate.select;
 
 /**
  * Login page
  * Use mantine form to validate
  */
-export default function RegisterPage() {
-    const { register } = useContext(ProfileContext);
-    const [refreshBg, setRefreshBg] = useState(0);
+
+const userTypes = [
+    {value: 'normal', label: 'User'},
+    {value: 'producer', label: 'Local producer'},
+    {value: 'partner', label: 'Partner'},
+]
+
+export default function LoginPage() {
+    const { register } = useContext(ProfileContext)
+    const [selectedUserType, setSelectedUserType] = useState<string>('');
     const router = useRouter();
 
-    useEffect(() => {
-        setRefreshBg(refreshBg + 1);
-    }, []);
-
     const form = useForm({
-        initialValues: { email: '', password: '', firstName: '', lastName: '', phoneNumber: ''},
+        initialValues: { email: '', password: '', name: ''},
 
         // functions will be used to validate values at corresponding key
         validate: {
@@ -48,89 +53,43 @@ export default function RegisterPage() {
                 if (!value) {
                     return 'Password is required';
                 }
-                if (value?.length <= 5) {
-                    return 'Password must be at least 5 characters long';
+                return null;
+            },
+            name: (value) => {
+                if (!value) {
+                    return 'Password is required';
                 }
                 return null;
             },
-            firstName: (value) => {
-                if (!value) {
-                    return 'First name is required';
-                }
-                if (value?.length <= 5) {
-                    return 'First name must be at least 5 characters long';
-                }
-                return null;
-            },
-            lastName: (value) => {
-                if (!value) {
-                    return 'Last name is required';
-                }
-                if (value?.length <= 5) {
-                    return 'Last name must be at least 5 characters long';
-                }
-                return null;
-            },
-            phoneNumber: (value) => {
-                if (!value) {
-                    return 'Phone number is required';
-                }
-                if (value?.length <= 5) {
-                    return 'Phone number must be at least 5 characters long';
-                }
-                if (value !== '' && !value.match(/^\d{4} \d{3} \d{3}$/g)) {
-                    return 'Please enter a xxxx xxx xxx phone number.';
-                }
-                return null;
-            }
         },
     });
 
     const handleSubmit = (values: any) => {
-        register({ email: values?.email, password: values?.password, firstName: values?.firstName, lastName: values?.lastName, phoneNumber: values?.phoneNumber?.trim() })
+        register({ email: values?.email, password: values?.password, user_type: selectedUserType, name: values?.name })
     }
 
     return (
         <div
-            key={refreshBg}
-            className='flex justify-center items-stretch position-absolute w-screen h-screen bg-cover bg-center bg-no-repeat'
-            style={{backgroundImage: `url(${bg.src})`, width: '100%', height: '100&'}}>
-            <Box className='w-[800px] position-absolutess mt-10'>
+            className='flex justify-center items-stretch position-absolute bg-cover bg-center bg-no-repeat w-screen h-screen'
+            style={{backgroundImage: `url(${bg.src})`}}>
+            <Box className='w-3/5 position-absolutess mt-10'>
                 <Container size={420} my={40}>
-                    <Paper withBorder shadow="md" p={20} radius="md">
-
-                        <Image className="flex justify-center mx-auto -mb-24 -mt-20"
-                               src='/../public/meoris.png'
-                               width={300}
-                               height={300}
-                               alt="MindMatrix logo"
-                        />
-
+                    <Paper withBorder shadow="md" p={20} mt={30} radius="md">
                         <form noValidate onSubmit={form.onSubmit(handleSubmit)}>
                             <TextInput
                                 autoFocus
-                                name='firstName'
-                                label="First Name"
-                                placeholder="John"
-                                required {...form.getInputProps('firstName')}
+                                name='name'
+                                label="Name"
+                                placeholder="Enter your name"
+                                required {...form.getInputProps('name')}
+                                className={'mt-14'}
                             />
                             <TextInput
-                                name='lastName'
-                                label="Last Name"
-                                placeholder="Doe"
-                                required {...form.getInputProps('lastName')}
-                            />
-                            <TextInput
+                                mt={'md'}
                                 name='email'
                                 label="Email"
                                 placeholder="example@domain.com"
                                 required {...form.getInputProps('email')}
-                            />
-                            <TextInput
-                                name='phoneNumber'
-                                label="Phone Number"
-                                placeholder="xxxx xxx xxx"
-                                required {...form.getInputProps('phoneNumber')}
                             />
                             <PasswordInput
                                 label="Password"
@@ -138,14 +97,19 @@ export default function RegisterPage() {
                                 placeholder="Enter password"
                                 required {...form.getInputProps('password')}
                                 mt="md" />
+                            <Select
+                                data={userTypes}
+                                label="User type"
+                                placeholder="Select user type"
+                                value={selectedUserType}
+                                onChange={(value: any) => setSelectedUserType(value)}
+                                mt="md"
+                            />
                             <Button  variant="gradient" gradient={{ from: 'rgba(104, 152, 242, 1)', to: 'pink', deg: 196 }} type='submit' fullWidth mt="xl">
-                                Register now
+                                Register
                             </Button>
-                            <Link href={'/login'}>
-                                <Text className="-mb-3" size="sm" align="center" mt="md" variant="link">Do you already have an account? Login here.</Text>
-                            </Link>
-                            <Link href={'/start/dashboard'}>
-                                <Text size="sm" align="center" mt="md" variant="link">Go back to the home page.</Text>
+                            <Link href={'/register'}>
+                                <Text className="-mb-3" size="sm" align="center" mt="md" variant="link">You already have an account? Login now!</Text>
                             </Link>
                         </form>
                     </Paper>

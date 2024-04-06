@@ -62,7 +62,7 @@ function Header() {
       <Card className='flex bg-gray-100 h-[60px] justify-between w-screen'>
       <div>
           {pathname == '/dashboard' ?
-              <div>Welcome back {profile?.firstName}</div> :
+              <div>Welcome back {profile?.name}</div> :
               <Button
                     onClick={() => router.push('/dashboard')}
                     leftIcon={<IconArrowBack/>}
@@ -86,7 +86,7 @@ function Header() {
 
           <IconBell className='ml-9'/>
           <IconUser className='ml-3'/>
-          <div className='ml-2 mr-9'>{profile?.firstName} {profile?.lastName}</div>
+          <div className='ml-2 mr-9'>{profile?.name}</div>
       </div>
 
       </Card>
