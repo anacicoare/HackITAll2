@@ -3,7 +3,7 @@ import {useEffect} from "react";
 import Layout from "@/contents/layout/Layout";
 import React from 'react';
 import QrCard from "@/contents/components/qr_card/qrCard";
-import LegalEntities from "@/contents/components/legalEntities/legalEntities";
+
 export default function ProducerHomepage() {
     const router = useRouter();
 
