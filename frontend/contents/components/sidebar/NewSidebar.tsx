@@ -10,14 +10,14 @@ export default function NewSidebar() {
     const [active, setActive] = useState(0);
     const router = useRouter();
     return (
-        <div className='bg-white flex-col h-screen w-[15%] p-2'>
+        <div className='bg-white flex-col h-screen w-[15%] p-2 shadow-xl'>
             <div className='flex flex-row justify-center'>
-                <Image className="justify-center -mb-24 -mt-10"
-                       src='/../public/meoris.png'
-                       width={200}
-                       height={200}
-                       alt="MindMatrix logo"
-                />
+                {/*<Image className="justify-center -mb-24 -mt-10"*/}
+                {/*       src='/../public/meoris.png'*/}
+                {/*       width={200}*/}
+                {/*       height={200}*/}
+                {/*       alt="MindMatrix logo"*/}
+                {/*/>*/}
             </div>
             <div className='flex flex-row'>
                 <NavLink

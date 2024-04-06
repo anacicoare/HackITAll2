@@ -68,7 +68,7 @@ function Header() {
                     leftIcon={<IconArrowBack/>}
                     variant="gradient" gradient={{ from: 'indigo', to: 'violet.9' }}
                     radius={'xl'}
-                    className='mt-3 ml-5 flex'
+                    className='ml-5 flex'
               > Back to dashboard </Button>
           }
       </div>
