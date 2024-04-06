@@ -23,5 +23,7 @@ urlpatterns = [
     path("test/", views.Test.as_view()),
     path("addlocation/", views.addLocationAndProcessQuery.as_view()),
     path("addBest/", views.addLocationAndProcessQuery.as_view()),
+    path("api/register/", views.Register.as_view(), name="register"),
+    path("api/login/", views.Login.as_view(), name="login"),
 ]
 
