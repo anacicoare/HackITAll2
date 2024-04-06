@@ -10,7 +10,9 @@ export default function Maps() {
     const router = useRouter();
     const [data, setData] = useState([]);
     const [lat, setLat] = useState(0);
-    const [long, setLong] = useState(0);
+    const [lon, setLon] = useState(0);
+    const [pointLat, setPointLat] = useState(0);
+    const [pointLong, setPointLong] = useState(0);
 
 
     const [cityCoordinates, setCityCoordinates] = useState(null);
@@ -20,31 +22,17 @@ export default function Maps() {
             const res_data = res?.data;
             setData(res_data);
 
+            console.log(res_data[0]?.lat);
+            console.log(res_data[0]?.lon);
+
             setLat(parseFloat(res_data[0]?.lat));
-            setLong(parseFloat(res_data[0]?.lon));
+            setLon(parseFloat(res_data[0]?.lon));
         })
 }
 
     useEffect(() => {
         getCityCoordinates('Constanta', 'ROMANIA');
     }, []);
-
-    // useEffect(() => {
-    //     loadModules(['esri/Map', 'esri/views/MapView'], { css: true })
-    //         .then(([ArcGISMap, MapView]) => {
-    //             const map = new ArcGISMap({
-    //                 basemap: 'topo-vector'
-    //             });
-    //
-    //             const view = new MapView({
-    //                 container: 'mapContainer',
-    //                 map: map,
-    //                 center: [long, lat], // Longitude, Latitude
-    //                 zoom: 13
-    //             });
-    //         })
-    //         .catch((err) => console.error(err));
-    // }, []);
 
     useEffect(() => {
         loadModules(['esri/Map', 'esri/views/MapView', 'esri/Graphic', 'esri/symbols/TextSymbol'], { css: true })
@@ -56,9 +44,11 @@ export default function Maps() {
                 const view = new MapView({
                     container: 'mapContainer',
                     map: map,
-                    center: [long, lat], // Longitude, Latitude
+                    center: [lon, lat], // Longitude, Latitude
                     zoom: 13
                 });
+
+                let pointGraphic = null;
 
                 // Event listener for click event on the map view
                 view.on("click", (event: any) => {
@@ -66,63 +56,65 @@ export default function Maps() {
                     const { mapPoint } = event;
                     const { latitude, longitude } = mapPoint;
 
-                    // Display the coordinates in the console
-                    console.log("Latitude:", latitude);
-                    console.log("Longitude:", longitude);
+                    // Create a marker symbol
+                    const markerSymbol = {
+                        type: "simple-marker",
+                        color: [144, 238, 144], // Light green
+                        outline: {
+                            color: [255, 255, 255], // White
+                            width: 1
+                        }
+                    };
+
+                    // Create a point geometry
+                    const point = {
+                        type: "point",
+                        longitude: longitude,
+                        latitude: latitude
+                    };
+
+                    // Create a graphic for the marker
+                    const newPointGraphic = new Graphic({
+                        geometry: point,
+                        symbol: markerSymbol
+                    });
+
+                    // Clear previous graphics
+                    view.graphics.removeAll();
+
+                    // Add the marker graphic to the view
+                    view.graphics.add(newPointGraphic);
+
+                    // Store the reference to the new point graphic
+                    pointGraphic = newPointGraphic;
+
+                    // Create a text symbol for the label
+                    const textSymbol = {
+                        type: "text",
+                        color: [0, 0, 0], // Black
+                        haloColor: [255, 255, 255], // White
+                        haloSize: "1px",
+                        text: "Producer 1", // Set the label text
+                        xoffset: 0,
+                        yoffset: 10,
+                        font: {
+                            size: 12,
+                            family: "sans-serif"
+                        }
+                    };
+
+                    // Create a graphic for the label
+                    const textGraphic = new Graphic({
+                        geometry: point,
+                        symbol: textSymbol
+                    });
+
+                    // Add the label graphic to the view
+                    view.graphics.add(textGraphic);
                 });
-
-                // Create a marker symbol
-                const markerSymbol = {
-                    type: "simple-marker",
-                    color: [144, 238, 144], // Light green
-                    outline: {
-                        color: [255, 255, 255], // White
-                        width: 1
-                    }
-                };
-
-                // Create a point geometry
-                const point = {
-                    type: "point",
-                    longitude: long,
-                    latitude: lat
-                };
-
-                // Create a graphic for the marker
-                const pointGraphic = new Graphic({
-                    geometry: point,
-                    symbol: markerSymbol
-                });
-
-                // Add the marker graphic to the view
-                view.graphics.add(pointGraphic);
-
-                // Create a text symbol for the label
-                const textSymbol = {
-                    type: "text",
-                    color: [0, 0, 0], // Black
-                    haloColor: [255, 255, 255], // White
-                    haloSize: "1px",
-                    text: "Producer 1", // Set the label text
-                    xoffset: 0,
-                    yoffset: 10,
-                    font: {
-                        size: 12,
-                        family: "sans-serif"
-                    }
-                };
-
-                // Create a graphic for the label
-                const textGraphic = new Graphic({
-                    geometry: point,
-                    symbol: textSymbol
-                });
-
-                // Add the label graphic to the view
-                view.graphics.add(textGraphic);
             })
             .catch((err) => console.error(err));
-    }, [lat, long]);
+    }, []);
 
     return (
         <React.Fragment>
