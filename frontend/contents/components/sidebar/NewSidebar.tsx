@@ -10,7 +10,7 @@ export default function NewSidebar() {
     const [active, setActive] = useState(0);
     const router = useRouter();
     return (
-        <div className='bg-white flex-col h-screen w-[15%] p-2'>
+        <div className='bg-white flex-col h-screen w-[15%] p-2 shadow-xl'>
             <div className='flex flex-row justify-center'>
 
             </div>
