@@ -18,7 +18,7 @@ const Layout = (props) => {
   return (
     <>
       <Head>
-        <title>{props?.title ? props?.title : "MindMatrix"}</title>
+        <title>{props?.title ? props?.title : ""}</title>
       </Head>
       <div className="flex">
           <NewSidebar />

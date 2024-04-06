@@ -5,7 +5,7 @@ import jwtDecode from "jwt-decode";
 
 //Main axiosInstance
 const axiosInstance = axios.create({
-  baseURL: 'http://localhost:3000/api',
+  baseURL: 'http://localhost:8000/api',
   timeout: 300000//Set timeout to 5 minutes
 });
 
