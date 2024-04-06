@@ -8,7 +8,7 @@ function qrCode() {
 
         return (
 
-            <div>
+            <div className={'h-[150px]'}>
 
                 <QRCode value={qrCodeValue} />
 

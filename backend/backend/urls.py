@@ -25,5 +25,7 @@ urlpatterns = [
     path("addBest/", views.addLocationAndProcessQuery.as_view()),
     path("api/register/", views.Register.as_view(), name="register"),
     path("api/login/", views.Login.as_view(), name="login"),
+    path("api/products/", views.ProductView.as_view(), name="products"),
+    path("api/products/<pk>/", views.ProductDelete.as_view(), name="products"),
 ]
 

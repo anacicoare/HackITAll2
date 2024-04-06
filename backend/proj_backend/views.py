@@ -1,8 +1,10 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework.generics import RetrieveUpdateDestroyAPIView
 import os
 
-from proj_backend.models import Location, PartnerUser, ProducerUser, NormalUser
+from proj_backend.models import Location, PartnerUser, ProducerUser, NormalUser, Products
+from proj_backend.serializers import ProductSerializer
 
 global locationCity 
 global locationCountry
@@ -315,8 +317,25 @@ class Login(APIView):
             },status=200)
         else:
             return Response(data={"this user does not exist"}, status=400)
-    
+
+class ProductView(APIView):
+    def get(self, request, format=None):
+        products = [ProductSerializer(product).data for product in Products.objects.all()]
+        return Response(data=products, status=200)
+
+    def post(self, request):
+        name = request.data.get('name')
+        price = request.data.get('price')
+        carbon_footprint = request.data.get('carbon_footprint')
+
+        product = Products(name=name, price=price, carbon_footprint=carbon_footprint)
+        product.save()
+
+        return Response(status=200, data={"created product successfully"})
 
 
+class ProductDelete(RetrieveUpdateDestroyAPIView):
+    serializer_class = ProductSerializer
+    queryset = Products.objects.all()
 
         
