@@ -37,7 +37,7 @@ class PartnerUser(models.Model):
 
 
 class Products(models.Model):
-    name = models.CharField(max_length=255)
+    name = models.CharField(max_length=255, unique=True)
     price = models.CharField(max_length=255)
     carbon_footprint = models.CharField(max_length=255)
 

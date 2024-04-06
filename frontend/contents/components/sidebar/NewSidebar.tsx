@@ -1,14 +1,18 @@
 import useWindowDimensions from "@/contents/components/sidebar/useWindowDimension";
 import {NavLink, Tabs} from "@mantine/core";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {IconCategory, IconLogout2, IconFolderOpen, IconPointFilled, IconSettings} from "@tabler/icons-react";
 import colors from "tailwindcss/colors";
 import Image from "next/image";
 import {useRouter} from "next/navigation";
+import {useContext} from "react";
+import {ProductsServices} from "@/services/products/products";
 
 export default function NewSidebar() {
     const [active, setActive] = useState(0);
     const router = useRouter();
+    const [products, setProducts] = useState([]);
+    
     return (
         <div className='bg-white flex-col h-screen w-[15%] p-2 shadow-xl'>
             <div className='flex flex-row justify-center'>
@@ -34,78 +38,24 @@ export default function NewSidebar() {
                 />
                 {active == 0 && <div className='mt-20 bg-blue-900 w-0.5'></div>}
             </div>
-            <div>
+
+            <div className='flex flex-row mt-[100px]'>
                 <NavLink
-                    label="My courses"
-                    icon={<IconFolderOpen/>}
-                    childrenOffset={18}
+                    onClick={() => setActive(3)}
+                    active={active === 3}
+                    label='Settings'
+                    icon={<IconSettings/>}
+                    color='indigo.8'
                     styles={(theme) => {
                         return {
                             label: {
                                 color: colors.black,
                                 fontSize: '1rem',
+                                fontWeight: active === 3 && '600'
                             }
                         }
                     }}
-                >
-                    <div className='flex flex-row'>
-                        <NavLink
-                            onClick={() => setActive(1)}
-                            active={active === 1}
-                            label="First course"
-                            icon={<IconPointFilled style={{color: "#ffea3a"}}/>}
-                            color='indigo.8'
-                            styles={(theme) => {
-                                return {
-                                    label: {
-                                        color: colors.black,
-                                        fontSize: '1rem',
-                                        fontWeight: active === 1 && '600'
-                                    }
-                                }
-                            }}
-                        />
-                        {active == 1 && <div className=' bg-blue-900 w-0.5'></div>}
-                    </div>
-                    <div className='flex flex-row'>
-                        <NavLink
-                            onClick={() => setActive(2)}
-                            active={active === 2}
-                            label="Second course"
-                            icon={<IconPointFilled style={{color: "#ffea3a"}}/>}
-                            color='indigo.8'
-                            styles={(theme) => {
-                                return {
-                                    label: {
-                                        color: colors.black,
-                                        fontSize: '1rem',
-                                        fontWeight: active === 2 && '600'
-                                    }
-                                }
-                            }}
-                        />
-                        {active == 2 && <div className=' bg-blue-900 w-0.5'></div>}
-                    </div>
-                </NavLink>
-            </div>
-
-            <div className='flex flex-row mt-[100px]'>
-            <NavLink
-                onClick={() => setActive(3)}
-                active={active === 3}
-                label='Settings'
-                icon={<IconSettings/>}
-                color='indigo.8'
-                styles={(theme) => {
-                    return {
-                        label: {
-                            color: colors.black,
-                            fontSize: '1rem',
-                            fontWeight: active === 3 && '600'
-                        }
-                    }
-                }}
-            />
+                />
                 {active == 3 && <div className=' bg-blue-900 w-0.5'></div>}
             </div>
 
@@ -118,8 +68,6 @@ export default function NewSidebar() {
                 }}
             />
         </div>
-
-
 
 
     )

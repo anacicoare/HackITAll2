@@ -1,8 +1,10 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework.generics import RetrieveUpdateDestroyAPIView
 import os
 
 from proj_backend.models import Location, PartnerUser, ProducerUser, NormalUser, Products
+from proj_backend.serializers import ProductSerializer
 
 global locationCity 
 global locationCountry
@@ -318,7 +320,7 @@ class Login(APIView):
 
 class ProductView(APIView):
     def get(self, request, format=None):
-        products = Products.objects.all()
+        products = [ProductSerializer(product).data for product in Products.objects.all()]
         return Response(data=products, status=200)
 
     def post(self, request):
@@ -332,5 +334,8 @@ class ProductView(APIView):
         return Response(status=200, data={"created product successfully"})
 
 
+class ProductDelete(RetrieveUpdateDestroyAPIView):
+    serializer_class = ProductSerializer
+    queryset = Products.objects.all()
 
         
