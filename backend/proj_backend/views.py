@@ -326,7 +326,9 @@ class Register(APIView):
         if user_type == 'normal':
             user = NormalUser(email=email, name=name, password=password)
         elif user_type == 'producer':
-            user = ProducerUser(email=email, name=name, password=password)
+            latitude = request.data.get('latitude')
+            longitude = request.data.get('longitude')
+            user = ProducerUser(email=email, name=name, password=password, latitude = latitude, longitude = longitude)
         elif user_type == 'partner':
             user = PartnerUser(email=email, name=name, password=password)
         else:

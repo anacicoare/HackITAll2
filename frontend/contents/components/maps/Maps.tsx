@@ -28,7 +28,7 @@ export default function Maps() {
             setLat(parseFloat(res_data[0]?.lat));
             setLon(parseFloat(res_data[0]?.lon));
         })
-}
+    }
 
     // useEffect(() => {
     //     getCityCoordinates('Constanta', 'ROMANIA');
@@ -98,7 +98,7 @@ export default function Maps() {
                         color: [0, 0, 0], // Black
                         haloColor: [255, 255, 255], // White
                         haloSize: "1px",
-                        text: "Producer 1", // Set the label text
+                        text: "My Location", // Set the label text
                         xoffset: 0,
                         yoffset: 10,
                         font: {
@@ -112,6 +112,7 @@ export default function Maps() {
                         geometry: point,
                         symbol: textSymbol
                     });
+                    // Allert with lat and long
 
                     // Add the label graphic to the view
                     view.graphics.add(textGraphic);
@@ -121,14 +122,6 @@ export default function Maps() {
     }, [lon, lat]);
 
     return (
-        <React.Fragment>
-            <Layout>
-            </Layout>
-            <div className='absolute left-[20%] top-[80px]'>
-                <h1>User Homepage</h1>
-                <div id="mapContainer" style={{height: '350px', width: '700px'}}/>
-            </div>
-        </React.Fragment>
-
+        <div id="mapContainer" style={{height: '200px', width: '300px'}}/>
     );
 }

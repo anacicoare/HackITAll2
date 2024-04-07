@@ -22,6 +22,8 @@ class ProducerUser(models.Model):
     email = models.CharField(max_length=255, unique=True)
     name = models.CharField(max_length=255)
     password = models.CharField(max_length=255)
+    latitude = models.CharField(max_length=255, default="0")
+    longitude = models.CharField(max_length=255, default="0")
 
     def __str__(self):
         return self.email
