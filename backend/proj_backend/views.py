@@ -271,6 +271,49 @@ def ReturnEmployeeCount(argCity, argCountry):
 
     return myCity
 
+class BarcodeView(APIView):
+    def lookup_product(barcode):
+        api_url = f'https://world.openfoodfacts.org/api/v0/product/{barcode}.json'
+        response = requests.get(api_url)
+        data = response.json()
+        if data['status'] == 1:
+            product_info = data['product']
+            return product_info
+        else:
+            return None
+
+    def get_product_info(barcode):
+        product_info = BarcodeView.lookup_product(barcode)
+        if product_info:
+            # Relevant keys related to carbon footprint, environment, and eco
+            relevant_keys = ["carbon_footprint_from_known_ingredients_debug",
+                             "carbon_footprint_percent_of_known_ingredients", "emission_class", "manufacturing_places",
+                             "labels", "energy_100g", "environment_impact_level"]
+
+            # Iterate through relevant keys
+            for key in relevant_keys:
+                if key in product_info:
+                    print(f"{key}: {product_info[key]}")
+
+            relevant_ecoscore_keys = ["grade", "score", "agribalyse", "missing"]
+            # Extract from "ecoscore_data", if available
+            ecoscore_data = product_info.get('ecoscore_data', {})
+            for key, value in ecoscore_data.items():
+                if key in relevant_ecoscore_keys:
+                    if key == "grade" or key == "score":
+                        print(f"{key}: {value}")
+                    else:
+                        for k, v in value.items():
+                            print(f"{k}: {v}")
+        else:
+            print("Product not found for the given barcode.")
+    def post(self, request):
+        barcode = request.data.get('barcode')
+        product_info = BarcodeView.get_product_info(barcode)
+        return Response(data=product_info, status=200)
+
+
+
 class Register(APIView):
     def post(self, request):
         email = request.data.get('email')
